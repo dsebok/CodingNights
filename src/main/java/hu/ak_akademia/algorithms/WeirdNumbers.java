@@ -2,6 +2,7 @@ package hu.ak_akademia.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.LongStream;
 
 /**
  * Furcsa számok: https://hu.wikipedia.org/wiki/Furcsa_sz%C3%A1mok
@@ -18,18 +19,42 @@ import java.util.List;
  */
 public class WeirdNumbers {
 
-    public List<Long> getWeirdNumbers(long limit) {
-        // csak pozitív, egész számokat fogadunk el
+    public static void main(String[] args) {
+        System.out.println(getWeirdNumbers(80));
+    }
 
+    public static List<Long> getWeirdNumbers(long limit) {
+        // csak pozitív, egész számokat fogadunk el
+        List<Long> weirdNumbers = new ArrayList<>();
         // osztók megkeresése
         for (long n = 70; n <= limit; n++) {
             List<Long> divisors = getProperDivisors(n);
-            //TODO...
+            if (isAbundantNumber(n, divisors)) {
+                if (isPseudoPerfectNumber(n, divisors)) {
+                    weirdNumbers.add(n);
+                }
+            }
         }
-        return null; //TODO...
+        return weirdNumbers;
     }
 
-    private List<Long> getProperDivisors(long n) {
+    private static boolean isPseudoPerfectNumber(long n, List<Long> divisors) {
+        return isPseudoPerfectNumber(n, 0, divisors);
+    }
+
+    private static boolean isPseudoPerfectNumber(long n, long sum, List<Long> divisors) {
+        if (divisors.isEmpty()) {
+            return sum == n;
+        } else {
+            final ArrayList<Long> copy = new ArrayList<>(divisors);
+            long divisor = copy.remove(0);
+            boolean branchOneResult = isPseudoPerfectNumber(n, sum, copy);
+            boolean branchTwoResult = isPseudoPerfectNumber(n, sum + divisor, copy);
+            return branchOneResult || branchTwoResult;
+        }
+    }
+
+    private static List<Long> getProperDivisors(long n) {
         //TODO refactor it with streams
         List<Long> divisors = new ArrayList<>();
         long i = 1;
@@ -47,5 +72,24 @@ public class WeirdNumbers {
             i++;
         }
         return divisors;
+    }
+
+    private static List<Long> getProperDivisors2(long n) {
+        return LongStream.rangeClosed(1, n / 2)
+                .filter(i -> (n % i == 0))
+                .boxed()
+                .toList();
+    }
+
+    private static boolean isAbundantNumber(long n, List<Long> properDivisors) {
+        return properDivisors.stream()
+                .mapToLong(a -> a)
+                .sum() > n;
+    }
+
+    private static boolean isAbundantNumberV2(long n, List<Long> properDivisors) {
+        return properDivisors.stream()
+                .reduce((a, b) -> a + b)
+                .orElse(0L) > n;
     }
 }
