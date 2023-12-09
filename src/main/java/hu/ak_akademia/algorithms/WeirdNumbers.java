@@ -20,7 +20,7 @@ import java.util.stream.LongStream;
 public class WeirdNumbers {
 
     public static void main(String[] args) {
-        System.out.println(getWeirdNumbers(80));
+        System.out.println(getWeirdNumbers(836));
     }
 
     public static List<Long> getWeirdNumbers(long limit) {
@@ -30,7 +30,7 @@ public class WeirdNumbers {
         for (long n = 70; n <= limit; n++) {
             List<Long> divisors = getProperDivisors(n);
             if (isAbundantNumber(n, divisors)) {
-                if (isPseudoPerfectNumber(n, divisors)) {
+                if (!isPseudoPerfectNumber(n, divisors)) {
                     weirdNumbers.add(n);
                 }
             }
