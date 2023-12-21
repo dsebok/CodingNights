@@ -20,36 +20,38 @@ import java.util.stream.LongStream;
 public class WeirdNumbers {
 
     public static void main(String[] args) {
-        System.out.println(getWeirdNumbers(836));
+        System.out.println(getWeirdNumbers(1000));
     }
 
     public static List<Long> getWeirdNumbers(long limit) {
         // csak pozitív, egész számokat fogadunk el
         List<Long> weirdNumbers = new ArrayList<>();
         // osztók megkeresése
-        for (long n = 70; n <= limit; n++) {
+        for (long n = 1; n <= limit; n++) {
             List<Long> divisors = getProperDivisors(n);
-            if (isAbundantNumber(n, divisors)) {
-                if (!isPseudoPerfectNumber(n, divisors)) {
-                    weirdNumbers.add(n);
-                }
+            long abundantPart = getAbundantPart(n, divisors);
+            if (abundantPart > 0 && !isPseudoPerfectNumber(divisors, abundantPart)) {
+                weirdNumbers.add(n);
             }
         }
         return weirdNumbers;
     }
 
-    private static boolean isPseudoPerfectNumber(long n, List<Long> divisors) {
-        return isPseudoPerfectNumber(n, 0, divisors);
+    private static boolean isPseudoPerfectNumber(List<Long> properDivisors, long abundantPart) {
+        List<Long> reducedDivisors = properDivisors.stream()
+                .filter(divisor -> divisor <= abundantPart)
+                .toList();
+        return isPseudoPerfectNumber(abundantPart, 0, reducedDivisors);
     }
 
     private static boolean isPseudoPerfectNumber(long n, long sum, List<Long> divisors) {
         if (divisors.isEmpty()) {
             return sum == n;
         } else {
-            final ArrayList<Long> copy = new ArrayList<>(divisors);
+            ArrayList<Long> copy = new ArrayList<>(divisors);
             long divisor = copy.remove(0);
-            boolean branchOneResult = isPseudoPerfectNumber(n, sum, copy);
-            boolean branchTwoResult = isPseudoPerfectNumber(n, sum + divisor, copy);
+            boolean branchOneResult = isPseudoPerfectNumber(n, sum + divisor, copy);
+            boolean branchTwoResult = isPseudoPerfectNumber(n, sum, copy);
             return branchOneResult || branchTwoResult;
         }
     }
@@ -81,10 +83,11 @@ public class WeirdNumbers {
                 .toList();
     }
 
-    private static boolean isAbundantNumber(long n, List<Long> properDivisors) {
-        return properDivisors.stream()
+    private static long getAbundantPart(long n, List<Long> properDivisors) {
+        long divisorSum = properDivisors.stream()
                 .mapToLong(a -> a)
-                .sum() > n;
+                .sum();
+        return divisorSum - n;
     }
 
     private static boolean isAbundantNumberV2(long n, List<Long> properDivisors) {
