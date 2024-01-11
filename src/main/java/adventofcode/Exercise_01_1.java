@@ -4,12 +4,12 @@ import io.CustomReader;
 
 import java.util.List;
 
-public class Exercise_01 {
+public class Exercise_01_1 {
 
     public static void main(String[] args) {
-        List<String> input = CustomReader.readFile("resources/input_01.txt");
+        List<String> input = CustomReader.readFile("resources/input_01_2.txt");
         long result = input.stream()
-                .mapToInt(Exercise_01::readCalibrationValue)
+                .mapToInt(Exercise_01_1::readCalibrationValue)
                 .sum();
         System.out.println(result);
     }
