@@ -7,7 +7,7 @@ import java.util.List;
 public class Exercise_01 {
 
     public static void main(String[] args) {
-        List<String> input = CustomReader.readFile("src/main/resources/input_01.txt");
+        List<String> input = CustomReader.readFile("resources/input_01.txt");
         long result = input.stream()
                 .mapToInt(Exercise_01::readCalibrationValue)
                 .sum();
