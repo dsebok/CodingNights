@@ -5,6 +5,9 @@ import io.CustomReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,11 +22,16 @@ public class Exercise_02_1 {
         List<Game> games = input.stream()
                 .map(Exercise_02_1::parse)
                 .toList();
-        long result = games.stream()
+        long result1 = games.stream()
                 .filter(game -> game.arePossibleBases(RED_BASES, GREEN_BASES, BLUE_BASES))
                 .mapToLong(Game::getId)
                 .sum();
-        System.out.println(result);
+        System.out.println(result1);
+        long result2 = games.stream()
+                .map(Game::findMinimumSet)
+                .mapToLong(Round::getPowerOfBalls)
+                .sum();
+        System.out.println(result2);
     }
 
     private static Game parse(String s) {
@@ -75,6 +83,20 @@ public class Exercise_02_1 {
             return rounds.stream()
                     .allMatch(r -> r.getRedBalls() <= redBases && r.getGreenBalls() <= greenBases && r.getBlueBalls() <= blueBases);
         }
+
+        public Round findMinimumSet() {
+            int minRedBalls = findMaxBalls(Round::getRedBalls);
+            int minGreenBalls = findMaxBalls(Round::getGreenBalls);
+            int minBlueBalls = findMaxBalls(Round::getBlueBalls);
+            return new Round(minRedBalls, minGreenBalls, minBlueBalls);
+        }
+
+        private int findMaxBalls(ToIntFunction<Round> ballSupplier) {
+            return rounds.stream()
+                    .mapToInt(ballSupplier)
+                    .max()
+                    .orElse(0);
+        }
     }
 
     private static class Round {
@@ -97,6 +119,9 @@ public class Exercise_02_1 {
         }
         public int getBlueBalls() {
             return blueBalls;
+        }
+        public long getPowerOfBalls() {
+            return (long) redBalls * greenBalls * blueBalls;
         }
     }
 }
