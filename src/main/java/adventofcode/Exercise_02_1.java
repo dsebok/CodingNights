@@ -23,10 +23,9 @@ public class Exercise_02_1 {
                 .map(Exercise_02_1::parse)
                 .toList();
         long result1 = games.stream()
-                .filter(game -> game.arePossibleBases(RED_BASES, GREEN_BASES, BLUE_BASES))
+                .filter(g -> g.arePossibleBases(GREEN_BASES, RED_BASES, BLUE_BASES))
                 .mapToLong(Game::getId)
                 .sum();
-        System.out.println(result1);
         long result2 = games.stream()
                 .map(Game::findMinimumSet)
                 .mapToLong(Round::getPowerOfBalls)
@@ -114,12 +113,15 @@ public class Exercise_02_1 {
         public int getRedBalls() {
             return redBalls;
         }
+
         public int getGreenBalls() {
             return greenBalls;
         }
+
         public int getBlueBalls() {
             return blueBalls;
         }
+
         public long getPowerOfBalls() {
             return (long) redBalls * greenBalls * blueBalls;
         }
