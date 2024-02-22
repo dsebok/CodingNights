@@ -5,8 +5,6 @@ import io.CustomReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,10 +20,15 @@ public class Exercise_02_1 {
         List<Game> games = input.stream()
                 .map(Exercise_02_1::parse)
                 .toList();
-        long result = games.stream()
+        long result1 = games.stream()
                 .filter(game -> game.arePossibleBases(GREEN_BASES, BLUE_BASES, RED_BASES))
                 .mapToLong(Game::getId)
                 .sum();
+        long result2 = games.stream()
+                .map(Game::findMinimumSet)
+                .mapToLong(Round::getPowerOfBalls)
+                .sum();
+        System.out.println(result2);
     }
 
     private static Game parse(String s) {
