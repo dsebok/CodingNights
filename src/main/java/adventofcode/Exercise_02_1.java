@@ -22,16 +22,10 @@ public class Exercise_02_1 {
         List<Game> games = input.stream()
                 .map(Exercise_02_1::parse)
                 .toList();
-        long result1 = games.stream()
-                .filter(game -> game.arePossibleBases(RED_BASES, GREEN_BASES, BLUE_BASES))
+        long result = games.stream()
+                .filter(game -> game.arePossibleBases(GREEN_BASES, BLUE_BASES, RED_BASES))
                 .mapToLong(Game::getId)
                 .sum();
-        System.out.println(result1);
-        long result2 = games.stream()
-                .map(Game::findMinimumSet)
-                .mapToLong(Round::getPowerOfBalls)
-                .sum();
-        System.out.println(result2);
     }
 
     private static Game parse(String s) {
