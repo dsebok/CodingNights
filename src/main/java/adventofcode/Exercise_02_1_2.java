@@ -5,13 +5,11 @@ import io.CustomReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Exercise_02_1 {
+public class Exercise_02_1_2 {
 
     private static final int RED_BASES = 12;
     private static final int GREEN_BASES = 13;
@@ -20,7 +18,7 @@ public class Exercise_02_1 {
     public static void main(String[] args) {
         List<String> input = CustomReader.readFile("resources/input_02_1.txt");
         List<Game> games = input.stream()
-                .map(Exercise_02_1::parse)
+                .map(Exercise_02_1_2::parse)
                 .toList();
         long result1 = games.stream()
                 .filter(game -> game.arePossibleBases(RED_BASES, GREEN_BASES, BLUE_BASES))
