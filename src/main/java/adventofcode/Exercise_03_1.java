@@ -4,6 +4,7 @@ import io.CustomReader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Exercise_03_1 {
 
@@ -16,25 +17,55 @@ public class Exercise_03_1 {
 
     private static List<Long> findPartNumbers(List<String> input) {
         List<Long> result = new ArrayList<>();
-        // sequentially findNextNumber(row, i) --> row, i, size
-        // check if number is (engine) part --> check all the surroundings of the number --> don't forget the boundaries
-        // if checked --> add to result
+        Optional<PositionedNumber> foundNumber = findFirstNumber(input);
+        while (foundNumber.isPresent()) {
+            PositionedNumber number = foundNumber.get();
+            if (checkIfNumberContactsASymbol(input, number)) {
+                result.add(number.value);
+            }
+            foundNumber = findNextNumber(input, number);
+        }
         return result;
     }
 
-    private static PositionedNumber findNextNumber(int row, int i) {
-        // TODO: implement
-        return null;
+    private static Optional<PositionedNumber> findFirstNumber(List<String> input) {
+        for (int i = 0; i < input.size(); i++) {
+            String line = input.get(i);
+            for (int j = 0; j < line.length(); j++) {
+                char ch = line.charAt(j);
+                if (Character.isDigit(ch)) {
+                    int row = i;
+                    int startIndex = j;
+                    StringBuilder sb = new StringBuilder(Character.toString(ch));
+                    int k = j;
+                    while (k < line.length()) {
+                        char endCh = line.charAt(k);
+                        if (Character.isDigit(endCh)) {
+                            sb.append(endCh);
+                        } else {
+                            break;
+                        }
+                        k++;
+                    }
+                    int endIndex = k - 1;
+                    PositionedNumber p = new PositionedNumber(row, startIndex, endIndex, Long.parseLong(sb.toString()));
+                    return Optional.of(p);
+                }
+            }
+        }
+        return Optional.empty();
     }
 
-    private static boolean checkIfNumberContactsASymbol() {
+    private static Optional<PositionedNumber> findNextNumber(List<String> input, PositionedNumber number) {
+        // TODO: implement
+        return Optional.empty();
+    }
+
+    private static boolean checkIfNumberContactsASymbol(List<String> input, PositionedNumber number) {
         // TODO: implement
         return false;
     }
 
-    private static class PositionedNumber {
-        private int row;
-        private int startIndex;
-        private int size;
+    private record PositionedNumber(int row, int startIndex, int endIndex, long value) {
     }
 }
